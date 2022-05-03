@@ -3,19 +3,19 @@ import java.util.Objects;
 /*1.
 Да, с такими наименованиями проще читать)*/
 public class Task {
-   private String task;
+   private String name;
    private String description;
    private int id;
    private String status;
 
-    public Task(String task, String description, String status) {
-        this.task = task;
+    public Task(String name, String description, String status) {
+        this.name = name;
         this.description = description;
         this.status = status;
     }
 
-    public Task(String task, String description, int id) {
-        this.task = task;
+    public Task(String name, String description, int id) {
+        this.name = name;
         this.description = description;
         this.id = id;
     }
@@ -24,8 +24,8 @@ public class Task {
         return id;
     }
 
-    public String getTask() {
-        return task;
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
@@ -51,7 +51,7 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "taskName='" + task + '\'' +
+                "taskName='" + name + '\'' +
                 ", taskDescription='" + description + '\'' +
                 ", Id=" + id +
                 ", taskStatus='" + status + '\'' +
@@ -63,11 +63,11 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task1 = (Task) o;
-        return id == task1.id && Objects.equals(task, task1.task) && Objects.equals(description, task1.description) && Objects.equals(status, task1.status);
+        return id == task1.id && Objects.equals(name, task1.name) && Objects.equals(description, task1.description) && Objects.equals(status, task1.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(task, description, id, status);
+        return Objects.hash(name, description, id, status);
     }
 }
