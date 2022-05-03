@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-       Manager manager = new Manager();
+        Manager manager = new Manager();
 
         Task task1 = new Task("Помыть полы","не забыть использовать средство", "NEW");
         Task task2 = new Task("Помыть окна","не упасть из окна", "IN_PROGRESS");

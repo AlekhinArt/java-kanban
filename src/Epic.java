@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Epic extends Task  {
     private int id;
-
     private ArrayList<Sub> subs = new ArrayList<>();
 
     public Epic(String name, String description, String status) {

@@ -2,7 +2,6 @@
         Думаю необходимости в переопределение hashcode and equals на данный момент нет
         все паремтры предполагаемые к сравниванию, уже находятся в супер классе */
 
-
 public class Sub extends Task {
     private int epicId;
 

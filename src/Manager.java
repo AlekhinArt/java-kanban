@@ -8,7 +8,7 @@ public class Manager {
     HashMap < Integer, Sub> subTasks = new HashMap<>();
     HashMap < Integer, Task> tasks =  new HashMap<>();
 
-    void setEpicStatus (Epic epic){
+    void setEpicStatus(Epic epic){
         ArrayList< Sub > subs = epic.getSubs();
         if (subs == null){
             epic.setStatus("NEW");
@@ -24,7 +24,7 @@ public class Manager {
         }
     }
 
-    void addEpic (Epic epic){
+    void addEpic(Epic epic){
         epic.setId(generateId());
         setEpicStatus(epic);
         epicTasks.put(epic.getId(), epic);
@@ -40,7 +40,7 @@ public class Manager {
         setEpicStatus(epic);
     }
 
-    void addTask (Task task){
+    void addTask(Task task){
         task.setId(generateId());
         tasks.put(task.getId(), task);
     }
@@ -59,7 +59,7 @@ public class Manager {
         }
     }
 
-    void updateTask ( Task task, int id){
+    void updateTask(Task task, int id){
         if (tasks.containsKey(id)){
             tasks.remove(id);
             tasks.put(id, task);
@@ -84,7 +84,7 @@ public class Manager {
         }
     }
 
-    ArrayList<Sub> getAllSubOneEpic (int id){
+    ArrayList<Sub> getAllSubOneEpic(int id){
         Epic epic = epicTasks.get(id);
         ArrayList<Sub> subs = epic.getSubs();
         return  subs;
