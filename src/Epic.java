@@ -1,25 +1,12 @@
 import java.util.ArrayList;
 
 public class Epic extends Task  {
+    private int id;
 
     private ArrayList<Sub> subs = new ArrayList<>();
 
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    private int id;
-
-
     public Epic(String name, String description, String status) {
         super(name, description, status);
-
     }
 
     public Epic(String name, String description, int id) {
@@ -31,6 +18,16 @@ public class Epic extends Task  {
     }
     public void setSubs(ArrayList<Sub> subs) {
         this.subs = subs;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

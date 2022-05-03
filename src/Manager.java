@@ -8,7 +8,6 @@ public class Manager {
     HashMap < Integer, Sub> subTasks = new HashMap<>();
     HashMap < Integer, Task> tasks =  new HashMap<>();
 
-
     void setEpicStatus (Epic epic){
         ArrayList< Sub > subs = epic.getSubs();
         if (subs == null){
@@ -39,7 +38,6 @@ public class Manager {
         subsList.add(sub);
         epic.setSubs(subsList);
         setEpicStatus(epic);
-
     }
 
     void addTask (Task task){

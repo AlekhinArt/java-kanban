@@ -8,15 +8,12 @@ public class Sub extends Task {
 
     public Sub(String name, String description, String status, int epicId) {
         super(name, description, status);
-
-
         this.epicId = epicId;
     }
 
     public int getEpicId() {
         return epicId;
     }
-
 
     @Override
     public String toString() {
