@@ -1,15 +1,11 @@
-/*2.
-        Я переопределил метод, но тогда вопрос
-        В условиях данной задачи, я сравниваю только status,
-        зачем перегружать код, если я на данном этапе не планирую сравнивать?)
-         */
+package service.task;
 
 import java.util.Objects;
 
 public class SubTask extends Task {
     private int epicId;
 
-    public SubTask(String name, String description, String status, int epicId) {
+    public SubTask(String name, String description, Status status, int epicId) {
         super(name, description, status);
         this.epicId = epicId;
     }
@@ -20,7 +16,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "service.task.Task{" +
                 "taskName='" + getName() + '\'' +
                 ", taskDescription='" + getDescription() + '\'' +
                 ", taskId=" + getId() +

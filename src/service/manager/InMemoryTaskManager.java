@@ -1,36 +1,43 @@
+package service.manager;
+
+import service.Managers;
+import service.task.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Manager {
-
+public class InMemoryTaskManager implements TaskManager {
     int id;
     HashMap <Integer, Epic> epics = new HashMap<>();
-    HashMap < Integer, SubTask> subs = new HashMap<>(); // тогда правильнее и эту переменную переименовать
+    HashMap < Integer, SubTask> subs = new HashMap<>();
     HashMap < Integer, Task> tasks =  new HashMap<>();
 
-    void setEpicStatus(Epic epic){
+    @Override
+    public void setEpicStatus(Epic epic){
         ArrayList<SubTask> subTasks = epic.getSubs();
         if (subTasks == null){
-            epic.setStatus("NEW");
+            epic.setStatus(Status.NEW);
             return;
         }
         for (SubTask subTask : subTasks){
-            if (!subTask.getStatus().equals("DONE")){
-                epic.setStatus("IN_PROGRESS");
+            if (!subTask.getStatus().equals(Status.DONE)){
+                epic.setStatus(Status.IN_PROGRESS);
                 return;
             } else{
-                epic.setStatus("DONE");
+                epic.setStatus(Status.DONE);
             }
         }
     }
 
-    void addEpic(Epic epic){
+    @Override
+    public void addEpic(Epic epic){
         epic.setId(generateId());
         setEpicStatus(epic);
         epics.put(epic.getId(), epic);
     }
 
-    void addSub (SubTask subTask){
+    @Override
+    public void addSub (SubTask subTask){
         subTask.setId(generateId());
         subs.put(subTask.getId(), subTask);
         Epic epic = epics.get(subTask.getEpicId());
@@ -40,63 +47,68 @@ public class Manager {
         setEpicStatus(epic);
     }
 
-    void addTask(Task task){
+    @Override
+    public void addTask(Task task){
         task.setId(generateId());
         tasks.put(task.getId(), task);
     }
 
-    void updateEpic(Epic epic, int id){
+    @Override
+    public void updateEpic(Epic epic, int id){
         if (epics.containsKey(id)){
             epics.remove(id);
             epics.put(id, epic);
         }
     }
 
-    void updateSub(SubTask subTask, int id){
+    @Override
+    public void updateSub(SubTask subTask, int id){
         if (subs.containsKey(id)){
             subs.remove(id);
             subs.put(id, subTask);
         }
     }
 
-    void updateTask(Task task, int id){
+    @Override
+    public void updateTask(Task task, int id){
         if (tasks.containsKey(id)){
             tasks.remove(id);
             tasks.put(id, task);
         }
     }
 
-    void deleteAllEpics(){
+    @Override
+    public void deleteAllEpics(){
         epics.clear();
     }
 
-    void deleteAllSubTasks(){
+    @Override
+    public void deleteAllSubTasks(){
         subs.clear();
     }
 
-    void deleteAllTasks(){
+    @Override
+    public void deleteAllTasks(){
         tasks.clear();
     }
-    /*9
-    Вообще по заданию, получение списка всех задач и я думал вопрос будет к этому
-    поэтому позволь, я оставлю имя, но изменю сами методы)
-    Возможно так будет еще и правильнее)*/
 
-    ArrayList<Epic> getEpics() {
+    @Override
+    public ArrayList<Epic> getEpics() {
         ArrayList<Epic> epicsList = new ArrayList<>();
         for (Integer id : epics.keySet()){
         epicsList.add(epics.get(id));
         }
         return epicsList;
     }
-    // 10. По мне читалось как получить все сабы одного эпика вполне логично, но твой вариант тоже хорош))
-    ArrayList<SubTask> getEpicSubtasks(int id){
+
+    @Override
+    public ArrayList<SubTask> getEpicSubtasks(int id){
         Epic epic = epics.get(id);
-        ArrayList<SubTask> subTasks = epic.getSubs();
-        return subTasks;
+        return epic.getSubs();
     }
 
-    ArrayList<SubTask> getSubs() {
+    @Override
+    public ArrayList<SubTask> getSubs() {
         ArrayList<SubTask> subsList = new ArrayList<>();
         for (Integer id : subs.keySet()){
             subsList.add(subs.get(id));
@@ -104,7 +116,8 @@ public class Manager {
         return subsList;
     }
 
-    ArrayList<Task> getTasks() {
+    @Override
+    public ArrayList<Task> getTasks() {
         ArrayList<Task> tasksList = new ArrayList<>();
         for (Integer id : tasks.keySet()){
             tasksList.add(tasks.get(id));
@@ -112,42 +125,53 @@ public class Manager {
         return tasksList;
     }
 
-    void  deleteEpic(int id){
+    @Override
+    public void  deleteEpic(int id){
         if (epics.containsKey(id)){
             epics.remove(id);
         }
     }
 
-    void  deleteSub(int id){
+    @Override
+    public void  deleteSub(int id){
         if (subs.containsKey(id)){
             subs.remove(id);
         }
     }
 
-    void  deleteTask(int id){
+    @Override
+    public void  deleteTask(int id){
         if (tasks.containsKey(id)){
             tasks.remove(id);
         }
     }
 
-    Epic getOneEpic (int id){
+    @Override
+    public Epic getEpic (int id){
+        Managers.getDefaultHistory().add(epics.get(id));
         return epics.get(id);
     }
 
-    SubTask getOneSub (int id){
+    @Override
+    public SubTask getSub (int id){
+       Managers.getDefaultHistory().add(subs.get(id));
         return subs.get(id);
     }
 
-    Task getOneTask(int id){
+    @Override
+    public Task getTask(int id){
+        Managers.getDefaultHistory().add(tasks.get(id));
         return tasks.get(id);
     }
 
+    @Override
     public void print(){
      System.out.println(epics);
      System.out.println(subs);
      System.out.println(tasks);
     }
 
+    @Override
     public int generateId(){
         return id++;
     }
