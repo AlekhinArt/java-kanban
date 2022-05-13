@@ -5,12 +5,13 @@ import service.task.*;
 import java.util.ArrayList;
 
 public interface TaskManager {
-
-    void setEpicStatus(Epic epic);
+    /*по поводу get history
+    так по тому же самому условию, сначала делаем метод,
+    а потом переносим его в интерфейс, разве не так?)*/
 
     void addEpic(Epic epic);
 
-    void addSub (SubTask subTask);
+    void addSub(SubTask subTask);
 
     void addTask(Task task);
 
@@ -34,21 +35,17 @@ public interface TaskManager {
 
     ArrayList<Task> getTasks();
 
-    void  deleteEpic(int id);
+    void deleteEpic(int id);
 
-    void  deleteSub(int id);
+    void deleteSub(int id);
 
-    void  deleteTask(int id);
+    void deleteTask(int id);
 
-    Epic getEpic (int id);
+    Epic getEpic(int id);
 
-    SubTask getSub (int id);
+    SubTask getSub(int id);
 
     Task getTask(int id);
-
-    public void print();
-
-    public int generateId();
 
 }
 

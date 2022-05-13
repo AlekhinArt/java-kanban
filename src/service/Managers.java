@@ -1,17 +1,18 @@
 package service;
 
 import service.history.*;
+import service.manager.*;
 
 public class Managers {
-    private static service.manager.TaskManager TaskManager;
-    private static HistoryManager InMemoryHistoryManager = new InMemoryHistoryManager();
+    private static HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    private static TaskManager taskManager = new InMemoryTaskManager();
 
-    static public service.manager.TaskManager getDefault(){
-        return TaskManager;
+    static public HistoryManager getDefaultHistory() {
+        return inMemoryHistoryManager;
     }
 
-    static public HistoryManager getDefaultHistory(){
-        return InMemoryHistoryManager;
+    static public TaskManager getDefault() {
+        return taskManager;
     }
 
 }
