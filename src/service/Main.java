@@ -4,11 +4,6 @@ package service;
 import service.task.*;
 
 public class Main {
-    /*
-    Спасибо за уделенное время)
-
-    поправил всё кроме 2ух моментов, вопрос по Epic и по истории запросов
-    */
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
@@ -40,19 +35,19 @@ public class Main {
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
-        System.out.println(Managers.getDefaultHistory());
+        System.out.println(Managers.getDefaultHistory().getHistory());
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
-        System.out.println(Managers.getDefaultHistory());
+        System.out.println(Managers.getDefaultHistory().getHistory());
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(0);
         Managers.getDefault().getEpic(epic3.getId());
-        System.out.println((Managers.getDefaultHistory()));
+        System.out.println(Managers.getDefaultHistory().getHistory());
         Managers.getDefault().getEpic(epic3.getId());
-        System.out.println((Managers.getDefaultHistory()));
+        System.out.println(Managers.getDefaultHistory().getHistory());
 
     }
 }

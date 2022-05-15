@@ -2,25 +2,25 @@ package service.history;
 
 import service.task.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.LinkedList;
+
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private List<Task> history = new ArrayList<>();
+    private final LinkedList<Task> history = new LinkedList<>();
     private final static int NOTES = 10;
 
     @Override
     public void add(Task task) {
-        if (history.size() < NOTES) {
-            history.add(task);
-        } else {
+        if (task == null) return;
+        if (history.size() > NOTES) {
             history.remove(0);
-            history.add(task);
         }
+        history.add(task);
     }
 
     @Override
-    public List<Task> getHistory() {
+    public LinkedList<Task> getHistory() {
         return history;
     }
 

@@ -3,11 +3,10 @@ package service.manager;
 import service.task.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public interface TaskManager {
-    /*по поводу get history
-    так по тому же самому условию, сначала делаем метод,
-    а потом переносим его в интерфейс, разве не так?)*/
 
     void addEpic(Epic epic);
 
@@ -27,13 +26,13 @@ public interface TaskManager {
 
     void deleteAllTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<SubTask> getEpicSubtasks(int id);
+    ArrayList<Task> getEpicSubtasks(int id);
 
-    ArrayList<SubTask> getSubs();
+    List<SubTask> getSubs();
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     void deleteEpic(int id);
 
@@ -46,6 +45,8 @@ public interface TaskManager {
     SubTask getSub(int id);
 
     Task getTask(int id);
+
+    LinkedList<Task> getHistory();
 
 }
 
