@@ -5,7 +5,7 @@ import service.task.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id;
@@ -104,19 +104,29 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(int id) {
         if (epics.containsKey(id)) {
-            epics.remove(id);
             ArrayList<Integer> delSubsId = epics.get(id).getSubsId();
+            epics.remove(id);
             for (Integer delSubId : delSubsId) {
+
+                Managers.getDefaultHistory().remove(delSubId);
                 subs.remove(delSubId);
             }
+            Managers.getDefaultHistory().remove(id);
         }
     }
 
     @Override
     public void deleteSub(int id) {
         if (subs.containsKey(id)) {
+            int epicId = subs.get(id).getEpicId();
+            SubTask subTask = subs.get(id);
+            Epic epic = epics.get(subTask.getEpicId());
+            ArrayList<Integer> subsListId = epic.getSubsId();
+            subsListId.removeIf(i -> i.equals(subTask.getId()));
+            epic.setSubsId(subsListId);
             subs.remove(id);
-            setEpicStatus(epics.get(subs.get(id).getEpicId()));
+            setEpicStatus(epics.get(epicId));
+            Managers.getDefaultHistory().remove(id);
         }
     }
 
@@ -124,6 +134,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTask(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            Managers.getDefaultHistory().remove(id);
         }
     }
 
@@ -149,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public LinkedList<Task> getHistory() {
+    public List<Task> getHistory() {
         return Managers.getDefaultHistory().getHistory();
     }
 

@@ -1,7 +1,13 @@
-
 package service;
 
 import service.task.*;
+/*Привет!))
+* Оказывается было некоторое количество ошибок с прошлого спринта, вроде подправил всё)
+* Сомнительное конечно задание, если честно я пока не до конца понял как ЭТО работает)
+* Приятного просмотра и спасибо за уделенное время)
+*
+*/
+
 
 public class Main {
 
@@ -16,12 +22,11 @@ public class Main {
         SubTask subTask = new SubTask("Собрать чемодан ", "нужен паспорт и трусы",
                 Status.NEW, epic.getId());
         SubTask subTask2 = new SubTask("Обменять валюту", "лучше в сбере", Status.DONE, epic.getId());
-        Epic epic3 = new Epic("Встреча с друзьями",
+        SubTask subTask3 = new SubTask("Напиться в баре", "лучше не пить", Status.IN_PROGRESS,
+                epic.getId());
+        Epic epic2 = new Epic("Встреча с друзьями",
                 "Найти место и забронировать стол", Status.NEW);
-        Managers.getDefault().addEpic(epic3);
-        SubTask subTask3 = new SubTask("Позвонить в ресторан ", "стол на 6 человек",
-                Status.NEW, epic3.getId());
-
+        Managers.getDefault().addEpic(epic2);
         Managers.getDefault().addTask(task1);
         Managers.getDefault().addTask(task2);
         Managers.getDefault().addSub(subTask);
@@ -29,25 +34,22 @@ public class Main {
         Managers.getDefault().addSub(subTask3);
 
         //для проверки
-        System.out.println(" нулевой эпик " + Managers.getDefault().getEpicSubtasks(0));
-        Managers.getDefault().getEpics();
-        Managers.getDefault().getEpics();
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        System.out.println(Managers.getDefaultHistory().getHistory());
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        System.out.println(Managers.getDefaultHistory().getHistory());
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(0);
-        Managers.getDefault().getEpic(epic3.getId());
-        System.out.println(Managers.getDefaultHistory().getHistory());
-        Managers.getDefault().getEpic(epic3.getId());
-        System.out.println(Managers.getDefaultHistory().getHistory());
+        Managers.getDefault().getEpic(epic.getId());
+        Managers.getDefault().getEpic(epic2.getId());
+        Managers.getDefault().getSub(subTask.getId());
+        Managers.getDefault().getSub(subTask2.getId());
+        Managers.getDefault().getSub(subTask3.getId());
+        Managers.getDefault().getTask(task1.getId());
+        Managers.getDefault().getTask(task2.getId());
+        System.out.println("Добавляем  " + Managers.getDefaultHistory().getHistory());
+        Managers.getDefault().getEpic(epic.getId());
+        System.out.println("проверяем что она на последнем месте  " + Managers.getDefaultHistory().getHistory());
+        // Managers.getDefault().deleteSub(subTask.getId());
+        //Managers.getDefault().getSub(subTask.getId());
+        Managers.getDefault().deleteEpic(epic.getId());
+
+        System.out.println("проверяем эпик в чате ? " + Managers.getDefaultHistory().getHistory());
+
 
     }
 }

@@ -46,7 +46,7 @@ public interface TaskManager {
 
     Task getTask(int id);
 
-    LinkedList<Task> getHistory();
+    List <Task> getHistory();
 
 }
 
