@@ -1,11 +1,11 @@
-package service;
+package service.manager;
 
 import service.history.*;
-import service.manager.*;
+
 
 public class Managers {
-    private static HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-    private static TaskManager taskManager = new InMemoryTaskManager();
+    private static final HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+    private static final TaskManager taskManager = new InMemoryTaskManager();
 
     static public HistoryManager getDefaultHistory() {
         return inMemoryHistoryManager;

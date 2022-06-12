@@ -5,11 +5,12 @@ import service.task.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final HashMap<Integer, Node> customLinkedList = new HashMap<>();
-    private int size = 0;
+    private final Map<Integer, Node> customLinkedList = new HashMap<>();
+
     private Node head;
     private Node tail;
 
@@ -22,13 +23,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             oldTail.next = newNode;
         }
-        size++;
+
         customLinkedList.put(task.getId(), newNode);
     }
 
     public List<Task> getTasks(Node node) {
         List<Task> history = new ArrayList<>();
-        if (node == null) return null;
+        if (node == null) return history;
         while (node != null) {
             history.add(node.data);
             node = node.next;
@@ -37,7 +38,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public void removeNode(Node node) {
-        if (node == head) {
+        if (node == head && node.next != null) {
             head = node.next;
         }
         if (node.prev != null) {
@@ -47,7 +48,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             node.next.prev = node.prev;
         }
         node.next = null;
-        size--;
+
     }
 
     @Override
@@ -62,8 +63,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        removeNode(customLinkedList.get(id));
-        customLinkedList.remove(id);
+        if (customLinkedList.containsKey(id)) {
+            removeNode(customLinkedList.get(id));
+            customLinkedList.remove(id);
+        }
+
     }
 
     @Override
@@ -75,7 +79,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     public String toString() {
         return "InMemoryHistoryManager{" +
                 "customLinkedList=" + customLinkedList +
-                ", size=" + size +
                 ", head=" + head +
                 ", tail=" + tail +
                 '}';
