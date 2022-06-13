@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subs = new HashMap<>();
     private final Map<Integer, Task> tasks = new HashMap<>();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public void addEpic(Epic epic) {
@@ -63,18 +63,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        epics.clear();
-        deleteAllSubTasks();
+        List<Integer> epicsId = new ArrayList<>();
+        epicsId.addAll(epics.keySet());
+        for (Integer id : epicsId) {
+            deleteEpic(id);
+        }
     }
 
     @Override
     public void deleteAllSubTasks() {
-        subs.clear();
+        List<Integer> subsId = new ArrayList<>();
+        subsId.addAll(subs.keySet());
+        for (Integer id : subsId) {
+            deleteSub(id);
+        }
     }
 
     @Override
     public void deleteAllTasks() {
-        tasks.clear();
+        List<Integer> tasksId = new ArrayList<>();
+        tasksId.addAll(tasks.keySet());
+        for (Integer id : tasksId) {
+            deleteTask(id);
+        }
     }
 
     @Override

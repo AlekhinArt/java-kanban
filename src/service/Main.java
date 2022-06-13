@@ -2,15 +2,15 @@ package service;
 
 import service.manager.Managers;
 import service.task.*;
+/*Я дико извиняюсь, за отправленный, совершенно не работающий вариант)*/
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Поехали!");
         var manager = Managers.getDefault();
+        System.out.println("Поехали!");
         Task task1 = new Task("Помыть полы", "не забыть использовать средство", Status.NEW);
         Task task2 = new Task("Помыть окна", "не упасть из окна", Status.IN_PROGRESS);
-
         Epic epic = new Epic("Перезд", "Собрать всё и уехать", Status.NEW);
         manager.addEpic(epic);
         SubTask subTask = new SubTask("Собрать чемодан ", "нужен паспорт и трусы",
@@ -28,7 +28,7 @@ public class Main {
         manager.addSub(subTask3);
 
         //для проверки
-        manager.getEpic(epic.getId());
+       /* manager.getEpic(epic.getId());
         manager.getEpic(epic2.getId());
         manager.getSub(subTask.getId());
         manager.getSub(subTask2.getId());
@@ -42,13 +42,23 @@ public class Main {
         // Managers.getDefault().deleteSub(subTask.getId());
         //Managers.getDefault().getSub(subTask.getId());
         manager.deleteEpic(epic.getId());
-
-        System.out.println("проверяем эпик в чате ? " + manager.getHistory());
-        /*manager.getTask(task2.getId());
-        manager.getTask(task1.getId());*/
-        manager.deleteEpic(epic2.getId());
+*/
+        System.out.println("история " + manager.getHistory());
+        manager.getEpic(epic.getId());
         System.out.println("Добавляем  " + manager.getHistory());
+        manager.getSub(subTask.getId());
+        manager.getSub(subTask2.getId());
+        System.out.println("Добавляем еще " + manager.getHistory());
+        manager.deleteEpic(epic.getId());
+        System.out.println("должно быть пусто " + manager.getHistory());
+        manager.getEpic(epic2.getId());
 
+        System.out.println("проверяем epic в чате ? " + manager.getHistory());
+        manager.getTask(task1.getId());
+        manager.getTask(task2.getId());
+        System.out.println("проверяем tasks в чате ? " + manager.getHistory());
+        manager.deleteAllTasks();
+        System.out.println("проверяем Sub в чате ? " + manager.getHistory());
 
     }
 }

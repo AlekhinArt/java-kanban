@@ -23,7 +23,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             oldTail.next = newNode;
         }
-
         customLinkedList.put(task.getId(), newNode);
     }
 
@@ -38,8 +37,14 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public void removeNode(Node node) {
-        if (node == head && node.next != null) {
-            head = node.next;
+        if (node == head) {
+            if (node.next != null) {
+                head = node.next;
+            }
+            if (node.next == null && node.prev == null) {
+                head = null;
+                tail = null;
+            }
         }
         if (node.prev != null) {
             node.prev.next = node.next;
@@ -48,7 +53,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             node.next.prev = node.prev;
         }
         node.next = null;
-
     }
 
     @Override
@@ -67,7 +71,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(customLinkedList.get(id));
             customLinkedList.remove(id);
         }
-
     }
 
     @Override
