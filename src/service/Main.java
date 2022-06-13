@@ -50,15 +50,18 @@ public class Main {
         manager.getSub(subTask2.getId());
         System.out.println("Добавляем еще " + manager.getHistory());
         manager.deleteEpic(epic.getId());
+        //manager.deleteAllSubTasks();
         System.out.println("должно быть пусто " + manager.getHistory());
         manager.getEpic(epic2.getId());
-
         System.out.println("проверяем epic в чате ? " + manager.getHistory());
         manager.getTask(task1.getId());
+        manager.getTask(task1.getId());
         manager.getTask(task2.getId());
+        manager.getTask(task1.getId());
         System.out.println("проверяем tasks в чате ? " + manager.getHistory());
-        manager.deleteAllTasks();
-        System.out.println("проверяем Sub в чате ? " + manager.getHistory());
+        manager.deleteTask(task2.getId());
+        //manager.deleteAllTasks();
+        System.out.println("проверяем tasks в чате ? " + manager.getHistory());
 
     }
 }
