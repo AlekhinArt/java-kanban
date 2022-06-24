@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class SubTask extends Task {
     private final int epicId;
+    private Type type  = Type.SUBTASK;
 
     public SubTask(String name, String description, Status status, int epicId) {
         super(name, description, status);
@@ -37,6 +38,16 @@ public class SubTask extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), epicId);
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(Type type) {
+        this.type = type;
     }
 }
 

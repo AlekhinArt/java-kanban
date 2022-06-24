@@ -2,12 +2,20 @@ package service;
 
 import service.manager.Managers;
 import service.task.*;
-/*Я дико извиняюсь, за отправленный, совершенно не работающий вариант)*/
 
 public class Main {
 
     public static void main(String[] args) {
-        var manager = Managers.getDefault();
+        /*var manager = Managers.getDefault();
+        var managerFile = Managers.getFileBacked();
+
+        managerFile.addEpic( new Epic("Встреча с друзьями",
+                "Найти место и забронировать стол", Status.NEW));
+        System.out.println(manager.getEpic(0));
+        System.out.println(manager.getEpic(1));
+        System.out.println(managerFile.getEpic(1));
+        System.out.println(managerFile.getEpic(0));
+
         System.out.println("Поехали!");
         Task task1 = new Task("Помыть полы", "не забыть использовать средство", Status.NEW);
         Task task2 = new Task("Помыть окна", "не упасть из окна", Status.IN_PROGRESS);
@@ -26,16 +34,20 @@ public class Main {
         manager.addSub(subTask);
         manager.addSub(subTask2);
         manager.addSub(subTask3);
-
+        managerFile.addEpic(epic2);
+        System.out.println("Добавляем  " + manager.getEpics());
         //для проверки
-       /* manager.getEpic(epic.getId());
+        manager.getEpic(epic.getId());
         manager.getEpic(epic2.getId());
         manager.getSub(subTask.getId());
+        managerFile.getSub(subTask.getId());
         manager.getSub(subTask2.getId());
         manager.getSub(subTask3.getId());
         manager.getTask(task1.getId());
         manager.getTask(task2.getId());
-        System.out.println("Добавляем  " + manager.getHistory());
+        managerFile.addEpic(epic2);*/
+
+       /* System.out.println("Добавляем  " + manager.getHistory());
         manager.getEpic(epic.getId());
         manager.getTask(task1.getId());
         System.out.println("проверяем что она на последнем месте  " + manager.getHistory());
@@ -43,7 +55,7 @@ public class Main {
         //Managers.getDefault().getSub(subTask.getId());
         manager.deleteEpic(epic.getId());
 */
-        System.out.println("история " + manager.getHistory());
+        /*System.out.println("история " + manager.getHistory());
         manager.getEpic(epic.getId());
         System.out.println("Добавляем  " + manager.getHistory());
         manager.getSub(subTask.getId());
@@ -61,7 +73,8 @@ public class Main {
         System.out.println("проверяем tasks в чате ? " + manager.getHistory());
         manager.deleteTask(task2.getId());
         //manager.deleteAllTasks();
-        System.out.println("проверяем tasks в чате ? " + manager.getHistory());
+        System.out.println("проверяем tasks в чате ? " + manager.getHistory());*/
+
 
     }
 }

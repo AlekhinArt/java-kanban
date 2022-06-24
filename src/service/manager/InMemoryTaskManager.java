@@ -3,6 +3,7 @@ package service.manager;
 import service.history.HistoryManager;
 import service.task.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,6 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(int id) {
+        if (!epics.containsKey(id)) return null;
         Epic epic = epics.get(id);
         historyManager.add(epic);
         return epic;
@@ -160,6 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSub(int id) {
+        if (!subs.containsKey(id)) return null;
         SubTask subTask = subs.get(id);
         historyManager.add(subTask);
         return subTask;
@@ -167,6 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
+        if (!tasks.containsKey(id)) return null;
         Task task = tasks.get(id);
         historyManager.add(task);
         return task;
