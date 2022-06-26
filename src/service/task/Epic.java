@@ -2,6 +2,7 @@ package service.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
 
@@ -27,14 +28,24 @@ public class Epic extends Task {
     }
 
     @Override
-    public void setType(Type type) {
-        this.type = type;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return Objects.equals(subTasksId, epic.subTasksId) && type == epic.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subTasksId, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "subTasksId=" + subTasksId +
+                ", type=" + type +
+                '}';
     }
 }
-
-
-
-
-
-
-

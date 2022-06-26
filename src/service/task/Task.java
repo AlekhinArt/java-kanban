@@ -8,7 +8,7 @@ public class Task {
     private int id;
     private Status status;
     private Type type = Type.TASK;
-    private int epicId;
+
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -73,13 +73,5 @@ public class Task {
 
     public void setType(Type type) {
         this.type = type;
-    }
-
-    public int getEpicId() {
-        return epicId;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
     }
 }
