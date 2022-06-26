@@ -42,7 +42,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         File fileForExmaple2 = new File("bin\\tasks2.CSV");
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileForExmaple2);
-        System.out.println(fileBackedTasksManager2.getTask(3));
+        //System.out.println(fileBackedTasksManager2.getTask(3));
 
     }
 
@@ -167,7 +167,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         int i = 1;
         while (!lines[i].isEmpty()) {
             Task task = fileBackedTasksManager.fromString(lines[i]);
-            i++;
+            ++i;
             switch (task.getType()) {
                 case EPIC:
                     fileBackedTasksManager.addEpic((Epic) task);
@@ -179,8 +179,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     fileBackedTasksManager.addTask(task);
                     break;
             }
+            if (lines.length == i) break;
         }
-        if (i == lines.length - 1) {
+        if (i == lines.length) {
             return fileBackedTasksManager;
         } else {
             List<Integer> history = fromStringHistory(lines[lines.length - 1]);
