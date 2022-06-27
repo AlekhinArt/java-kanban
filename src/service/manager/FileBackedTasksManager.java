@@ -14,7 +14,7 @@ import java.util.List;
 //Спасибо!)
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    File file;
+    private final File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -38,12 +38,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 0));
         System.out.println(fileBackedTasksManager.getEpic(0));
         fileBackedTasksManager.getSub(4);
-        fileBackedTasksManager.getTask(2);
+
 
         File fileForExmaple2 = new File("bin\\tasks2.CSV");
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileForExmaple2);
         //System.out.println(fileBackedTasksManager2.getTask(3));
-
+        fileBackedTasksManager.getSub(5);
     }
 
     @Override
@@ -101,27 +101,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public List<Epic> getEpics() {
-        return super.getEpics();
-
-    }
-
-    @Override
-    public ArrayList<Task> getEpicSubtasks(int id) {
-        return super.getEpicSubtasks(id);
-    }
-
-    @Override
-    public ArrayList<SubTask> getSubs() {
-        return super.getSubs();
-    }
-
-    @Override
-    public ArrayList<Task> getTasks() {
-        return super.getTasks();
-    }
-
-    @Override
     public void deleteEpic(int id) {
         super.deleteEpic(id);
         save();
@@ -160,25 +139,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return task;
     }
 
+    // Добавил дополнительный метод, думаю так можно избежать повторного сохранения
+    public void addLoadTask(Task task) {
+        switch (task.getType()) {
+            case EPIC:
+                super.addEpic((Epic) task);
+                break;
+            case SUBTASK:
+                super.addSub((SubTask) task);
+                break;
+            case TASK:
+                super.addTask(task);
+                break;
+        }
+    }
+
     public static FileBackedTasksManager loadFromFile(File file) throws IOException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         String value = Files.readString(Path.of(String.valueOf(file)));
+        if (value.isEmpty()) return fileBackedTasksManager;
         String[] lines = value.split("\n");
         int i = 1;
         while (!lines[i].isEmpty()) {
             Task task = fileBackedTasksManager.fromString(lines[i]);
             ++i;
-            switch (task.getType()) {
-                case EPIC:
-                    fileBackedTasksManager.addEpic((Epic) task);
-                    break;
-                case SUBTASK:
-                    fileBackedTasksManager.addSub((SubTask) task);
-                    break;
-                case TASK:
-                    fileBackedTasksManager.addTask(task);
-                    break;
-            }
+            fileBackedTasksManager.addLoadTask(task);
             if (lines.length == i) break;
         }
         if (i == lines.length) {
@@ -187,13 +172,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             List<Integer> history = fromStringHistory(lines[lines.length - 1]);
             for (Integer idHistory : history) {
                 if (fileBackedTasksManager.getEpic(idHistory) != null) {
-                    Managers.getDefaultHistory().add(fileBackedTasksManager.getEpic(idHistory));
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.getEpic(idHistory));
                 }
                 if (fileBackedTasksManager.getSub(idHistory) != null) {
-                    Managers.getDefaultHistory().add(fileBackedTasksManager.getSub(idHistory));
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.getSub(idHistory));
                 }
                 if (fileBackedTasksManager.getTask(idHistory) != null) {
-                    Managers.getDefaultHistory().add(fileBackedTasksManager.getTask(idHistory));
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.getTask(idHistory));
                 }
             }
         }
@@ -223,7 +208,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
             writer.write("\n");
-            writer.write(toString(Managers.getDefaultHistory()));
+            writer.write(toString(historyManager));
         } catch (IOException e) {
             throw new ManagerSaveException(e.getMessage());
         }
@@ -276,10 +261,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return null;
     }
 
-    public class ManagerSaveException extends RuntimeException {
-
-        public ManagerSaveException(String message) {
-            super(message);
-        }
-    }
 }
