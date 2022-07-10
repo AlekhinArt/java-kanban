@@ -9,9 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-// Доброго времени суток вроде поправил всё)
-//Признаться если, благодоря твоим комментариям, я намного лучше понял, что требуется сделать
-//Спасибо!)
+
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
@@ -21,29 +19,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) throws IOException {
-        File fileForExample = new File("bin\\tasks.CSV");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(fileForExample);
-        fileBackedTasksManager.addEpic(new Epic("Перезд", "Собрать всё и уехать", Status.NEW));
-        fileBackedTasksManager.addEpic(new Epic("Перезд", "Собрать всё и уехать", Status.NEW));
-        fileBackedTasksManager.addTask(new Task("Помыть полы",
-                "не забыть использовать средство", Status.NEW));
-        fileBackedTasksManager.addTask(new Task("Помыть окна",
-                "не упасть из окна", Status.IN_PROGRESS));
-        fileBackedTasksManager.addSub(new SubTask("Собрать чемодан ", "нужен паспорт и трусы",
-                Status.NEW, 0));
-        fileBackedTasksManager.addSub(new SubTask("Обменять валюту",
-                "лучше в сбере", Status.DONE, 0));
-        fileBackedTasksManager.addSub(new SubTask("Напиться в баре",
-                "лучше не пить", Status.IN_PROGRESS,
-                0));
-        System.out.println(fileBackedTasksManager.getEpic(0));
-        fileBackedTasksManager.getSub(4);
 
-
-        File fileForExmaple2 = new File("bin\\tasks2.CSV");
-        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(fileForExmaple2);
-        //System.out.println(fileBackedTasksManager2.getTask(3));
-        fileBackedTasksManager.getSub(5);
     }
 
     @Override
@@ -139,7 +115,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return task;
     }
 
-    // Добавил дополнительный метод, думаю так можно избежать повторного сохранения
     public void addLoadTask(Task task) {
         switch (task.getType()) {
             case EPIC:
@@ -185,26 +160,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return fileBackedTasksManager;
     }
 
-    //метод сохранения задачи в строку
+
     public String makeSign(Task task) {
         return task.getId() + "," + task.getType() + ","
                 + task.getName() + "," + task.getStatus() + ","
                 + task.getDescription() + ",";
     }
 
-    //сохранение в файл
+    public String makeTimeSign(Task task) {
+        String sign = "";
+        if (task.getStarTime() != null) {
+            sign = task.getStarTime() + "," + task.getDuration() + "," + task.getEndTime() + ",";
+        }
+        return sign;
+    }
+
     public void save() {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epic\n");
 
             for (Task task : this.getEpics()) {
-                writer.write(makeSign(task) + "\n");
+                writer.write(makeSign(task) + makeTimeSign(task) + "\n");
             }
             for (Task task : this.getTasks()) {
-                writer.write(makeSign(task) + "\n");
+                writer.write(makeSign(task) + makeTimeSign(task) + "\n");
             }
             for (SubTask task : this.getSubs()) {
-                writer.write(makeSign(task) + task.getEpicId() + "\n");
+                writer.write(makeSign(task) + makeTimeSign(task) + task.getEpicId() + "\n");
             }
 
             writer.write("\n");
@@ -237,6 +219,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Status status;
         Type type;
         int id;
+        String startTime = "";
+        int duration = 0;
+        String endTime = " ";
+        boolean time = false;
 
         String[] line = value.split(",");
         name = line[2];
@@ -244,18 +230,46 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         id = Integer.parseInt(line[0]);
         status = Status.valueOf(line[3]);
         type = Type.valueOf(line[1]);
+
+        if (line.length > 5) {
+            if (line.length > 6) {
+                duration = Integer.parseInt(line[6]);
+                startTime = line[5];
+                endTime = line[7];
+                time = true;
+
+            }
+
+        }
+
+
         switch (type) {
             case EPIC:
                 Epic epic = new Epic(name, description, status);
                 epic.setId(id);
+                if (time) {
+                    epic.setStartTime(startTime);
+                    epic.setDuration(duration);
+                    epic.setEndTime(endTime);
+                }
                 return epic;
             case SUBTASK:
-                SubTask subTask = new SubTask(name, description, status, Integer.parseInt(line[5]));
+                SubTask subTask = new SubTask(name, description, status, Integer.parseInt(line[line.length - 1]));
                 subTask.setId(id);
+                if (time) {
+                    subTask.setStartTime(startTime);
+                    subTask.setDuration(duration);
+                    subTask.setEndTime(endTime);
+                }
                 return subTask;
             case TASK:
                 Task task = new Task(name, description, status);
                 task.setId(id);
+                if (time) {
+                    task.setStartTime(startTime);
+                    task.setDuration(duration);
+                    task.setEndTime(endTime);
+                }
                 return task;
         }
         return null;
