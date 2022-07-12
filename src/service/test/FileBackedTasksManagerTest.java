@@ -2,6 +2,7 @@ package service.test;
 
 import org.junit.jupiter.api.Test;
 import service.manager.FileBackedTasksManager;
+import service.manager.ManagerSaveException;
 import service.task.Epic;
 import service.task.Status;
 import service.task.SubTask;
@@ -33,11 +34,7 @@ class FileBackedTasksManagerTest {
         ArrayList<SubTask> subTasks = fileBackedTasksManager.getSubs();
 
         assertNotNull(subTasks, "Список задач пустой");
-        try {
-            testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
         ArrayList<SubTask> testSubTasks = fileBackedTasksManager.getSubs();
         assertEquals(2, testSubTasks.size(), "Не корректно загружен список из файла");
         assertEquals(subTasks, testSubTasks, "Не корректно загружен список из файла");
@@ -48,11 +45,7 @@ class FileBackedTasksManagerTest {
         ArrayList<SubTask> subTasks = fileBackedTasksManager.getSubs();
 
         assertEquals(0, subTasks.size(), "Список не пустой");
-        try {
-            testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
         ArrayList<SubTask> testSubTasks = fileBackedTasksManager.getSubs();
         assertEquals(0, testSubTasks.size(), "Список не пустой");
         assertEquals(subTasks, testSubTasks, "Не корректно загружен список из файла");
@@ -65,14 +58,13 @@ class FileBackedTasksManagerTest {
         List<Epic> epics = fileBackedTasksManager.getEpics();
 
         assertEquals(1, epics.size(), "Список пустой");
-        try {
-            testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        testFileBackedTasksManager = FileBackedTasksManager.loadFromFile(file);
         List<Epic> testEpics = fileBackedTasksManager.getEpics();
         assertEquals(1, testEpics.size(), "Список  пустой");
         assertEquals(epics, testEpics, "Не корректно загружен список из файла");
     }
+
+
+
 
 }

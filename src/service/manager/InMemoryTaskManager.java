@@ -10,8 +10,8 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subs = new HashMap<>();
     private final Map<Integer, Task> tasks = new HashMap<>();
-    Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTimeInLocal));
-    List<Task> tasksNoDate = new LinkedList<>();
+    private final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    private final List<Task> tasksNoDate = new LinkedList<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -229,6 +229,7 @@ public class InMemoryTaskManager implements TaskManager {
         return id++;
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         List<Task> tasks = new LinkedList<>();
         tasks.addAll(prioritizedTasks);
@@ -237,26 +238,27 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void checkTimeAndAdd(Task task) {
-        if (task.getStarTime() != null) {
+        if (task.getStartTime() != null) {
             prioritizedTasks.add(task);
         } else {
             tasksNoDate.add(task);
         }
     }
+// Возможно не заметили, чуть ниже для удаления)
 
     private void checkTimeAndRemove(Task task) {
-        if (task.getStarTime() != null) {
+        if (task.getStartTime() != null) {
             prioritizedTasks.remove(task);
         } else {
             tasksNoDate.remove(task);
         }
     }
 
-    public boolean checkTimeIntersection(Task task) {
-        if (task.getStarTime() != null) {
+    private boolean checkTimeIntersection(Task task) {
+        if (task.getStartTime() != null) {
             for (Task prioritizedTask : prioritizedTasks) {
-                if (prioritizedTask.getStartTimeInLocal().isAfter(task.getStartTimeInLocal())
-                        && prioritizedTask.getFormatEndTime().isBefore(task.getFormatEndTime())) {
+                if (prioritizedTask.getStartTime().isAfter(task.getStartTime())
+                        && prioritizedTask.getEndTime().isBefore(task.getEndTime())) {
                     return true;
                 }
             }

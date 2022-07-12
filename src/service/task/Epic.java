@@ -4,6 +4,7 @@ import service.manager.Managers;
 
 import java.time.Duration;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Epic extends Task {
@@ -12,9 +13,9 @@ public class Epic extends Task {
     private List<Integer> subTasksId = new ArrayList<>();
     private final List<SubTask> subTasks = new LinkedList<>();
     private final Type type = Type.EPIC;
-    private final int duration = 0;
-    private final String starTime = "";
-    private String endTime = "";
+    private int duration;
+    private LocalDateTime starTime;
+    private LocalDateTime endTime;
 
 
     public Epic(String name, String description, Status status) {
@@ -26,14 +27,14 @@ public class Epic extends Task {
         for (int id : subTasksId) {
             subTasks.add(Managers.getDefault().getSubs().get(id));
         }
-        this.subTasks.sort(Comparator.comparing(Task::getStartTimeInLocal));
-        setStartTime(this.subTasks.get(0).getStarTime());
-        setEndTime(this.subTasks.get(this.subTasks.size() - 1).getStarTime());
-        Duration duration = Duration.between(formatTime(getStarTime()), formatTime(getEndTime()));
-        setDuration(duration.toMinutesPart());
+        this.subTasks.sort(Comparator.comparing(Task::getStartTime));
+        this.starTime = this.subTasks.get(0).getStartTime();
+        this.endTime = this.subTasks.get(this.subTasks.size() - 1).getStartTime();
+        Duration durationBetween = Duration.between(this.starTime, this.endTime);
+        this.duration = durationBetween.toMinutesPart();
     }
 
-    public String getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
@@ -43,6 +44,18 @@ public class Epic extends Task {
 
     public void setSubsId(List<Integer> subTasks) {
         this.subTasksId = subTasks;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public LocalDateTime getStarTime() {
+        return starTime;
+    }
+
+    public void setStarTime(LocalDateTime starTime) {
+        this.starTime = starTime;
     }
 
 
@@ -73,7 +86,5 @@ public class Epic extends Task {
                 '}';
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
+
 }

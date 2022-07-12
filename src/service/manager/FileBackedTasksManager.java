@@ -18,7 +18,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws ManagerSaveException {
 
     }
 
@@ -129,10 +129,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) throws IOException {
+    public static FileBackedTasksManager loadFromFile(File file) {
+
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-        String value = Files.readString(Path.of(String.valueOf(file)));
-        if (value.isEmpty()) return fileBackedTasksManager;
+        String value;
+        try {
+            value = Files.readString(Path.of(String.valueOf(file)));
+            if (value.isEmpty()) return fileBackedTasksManager;
+        } catch (IOException e) {
+            throw new ManagerSaveException(e.getMessage());
+        }
         String[] lines = value.split("\n");
         int i = 1;
         while (!lines[i].isEmpty()) {
@@ -169,15 +175,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public String makeTimeSign(Task task) {
         String sign = "";
-        if (task.getStarTime() != null) {
-            sign = task.getStarTime() + "," + task.getDuration() + "," + task.getEndTime() + ",";
+        if (task.getStartTime() != null) {
+            sign = task.toStringTime(task.getStartTime()) + ","
+                    + task.getDuration() + "," + task.toStringTime(task.getEndTime()) + ",";
         }
         return sign;
     }
 
     public void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,start time,duration,end time,epic\n");
 
             for (Task task : this.getEpics()) {
                 writer.write(makeSign(task) + makeTimeSign(task) + "\n");
@@ -242,33 +249,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         }
 
-
         switch (type) {
             case EPIC:
                 Epic epic = new Epic(name, description, status);
                 epic.setId(id);
                 if (time) {
-                    epic.setStartTime(startTime);
+                    epic.setStartTime(epic.toFormatTime(startTime));
                     epic.setDuration(duration);
-                    epic.setEndTime(endTime);
+                    epic.setEndTime(epic.toFormatTime(endTime));
                 }
                 return epic;
             case SUBTASK:
                 SubTask subTask = new SubTask(name, description, status, Integer.parseInt(line[line.length - 1]));
                 subTask.setId(id);
                 if (time) {
-                    subTask.setStartTime(startTime);
+                    subTask.setStartTime(subTask.toFormatTime(startTime));
                     subTask.setDuration(duration);
-                    subTask.setEndTime(endTime);
                 }
                 return subTask;
             case TASK:
                 Task task = new Task(name, description, status);
                 task.setId(id);
                 if (time) {
-                    task.setStartTime(startTime);
+                    task.setStartTime(task.toFormatTime(startTime));
                     task.setDuration(duration);
-                    task.setEndTime(endTime);
                 }
                 return task;
         }

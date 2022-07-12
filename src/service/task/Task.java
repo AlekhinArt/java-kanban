@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
-    private String name;
+    private final String name;
     private String description;
     private int id;
     private Status status;
     private Type type = Type.TASK;
     private int duration;
-    private String startTime;
-
+    private LocalDateTime startTime;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -21,33 +21,29 @@ public class Task {
         this.status = status;
     }
 
-    public boolean checkTime() {
-        return (startTime != null);
+
+    public Task(String name, String description, Status status,  LocalDateTime startTime, int duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public LocalDateTime getFormatEndTime() {
-        return getStartTimeInLocal().plus(getDuration(this.duration));
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(getDurationInFormat(this.duration) );
     }
 
-    public String getEndTime() {
-        LocalDateTime time = getStartTimeInLocal().plus(getDuration(this.duration));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-        return time.format(formatter);
+    public Duration getDurationInFormat(int duration) {
+        return Duration.ofMinutes(duration);
     }
 
-    public LocalDateTime formatTime(String time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    public LocalDateTime toFormatTime(String time){
         return LocalDateTime.parse(time, formatter);
     }
-
-    public LocalDateTime getStartTimeInLocal() {
-        return formatTime(getStarTime());
-    }
-
-    public Duration getDuration(int duration) {
-        return Duration.ofMinutes(duration);
-
+    public String toStringTime(LocalDateTime time){
+        return time.format(formatter);
     }
 
     public int getId() {
@@ -78,6 +74,30 @@ public class Task {
         this.status = status;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
     @Override
     public String toString() {
         return "service.task.Task{" +
@@ -101,30 +121,4 @@ public class Task {
         return Objects.hash(name, description, id, status);
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public String getStarTime() {
-        return startTime;
-    }
-
-    public void setEndTime(String endTime) {
-    }
 }
