@@ -26,11 +26,11 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
     public void beforeEach() {
         epic = new Epic("Test epicStatus", "Test epicStatus description", Status.NEW);
         subTask = new SubTask("Test 1 ", "Test epicStatus description",
-                Status.NEW, LocalDateTime.now(), 8,epic.getId());
-        subTask2 = new SubTask("Test 2 ","Test epicStatus description",
-                Status.NEW,LocalDateTime.now().plusHours(1), 8 ,epic.getId());
-        subTask3 = new SubTask("Test 3","Test epicStatus description",
-                Status.NEW,LocalDateTime.now().plusHours(2), 8 ,epic.getId());
+                Status.NEW, LocalDateTime.now(), 8, epic.getId());
+        subTask2 = new SubTask("Test 2 ", "Test epicStatus description",
+                Status.NEW, LocalDateTime.now().plusHours(1), 8, epic.getId());
+        subTask3 = new SubTask("Test 3", "Test epicStatus description",
+                Status.NEW, LocalDateTime.now().plusHours(2), 8, epic.getId());
 
     }
 
@@ -83,16 +83,16 @@ class InMemoryTaskManagerTest extends TaskManagerTest {
     }
 
     @Test
-    void getPrioritizedTasks(){
+    void getPrioritizedTasks() {
         inMemoryTaskManager.addEpic(epic);
         inMemoryTaskManager.addSub(subTask);
         inMemoryTaskManager.addSub(subTask3);
         inMemoryTaskManager.addSub(subTask2);
 
         List<Task> testList = new LinkedList<>();
-        testList.add(0,subTask);
-        testList.add(1,subTask2);
-        testList.add(2,subTask3);
+        testList.add(0, subTask);
+        testList.add(1, subTask2);
+        testList.add(2, subTask3);
 
         List<Task> prioritizedList = inMemoryTaskManager.getPrioritizedTasks();
         assertEquals(3, prioritizedList.size(), " Добавлены не все задачи");

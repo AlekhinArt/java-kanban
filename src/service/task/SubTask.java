@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class SubTask extends Task {
     private final int epicId;
-    private Type type  = Type.SUBTASK;
+    private Type type = Type.SUBTASK;
 
     public SubTask(String name, String description, Status status, int epicId) {
         super(name, description, status);
@@ -14,7 +14,7 @@ public class SubTask extends Task {
 
     public SubTask(String name, String description, Status status, LocalDateTime startTime,
                    int duration, int epicId) {
-        super(name, description,  status, startTime, duration);
+        super(name, description, status, startTime, duration);
         this.epicId = epicId;
     }
 

@@ -9,14 +9,12 @@ import java.util.*;
 
 public class Epic extends Task {
 
-
     private List<Integer> subTasksId = new ArrayList<>();
     private final List<SubTask> subTasks = new LinkedList<>();
     private final Type type = Type.EPIC;
     private int duration;
     private LocalDateTime starTime;
     private LocalDateTime endTime;
-
 
     public Epic(String name, String description, Status status) {
         super(name, description, status);
@@ -58,7 +56,6 @@ public class Epic extends Task {
         this.starTime = starTime;
     }
 
-
     @Override
     public Type getType() {
         return type;
@@ -85,6 +82,5 @@ public class Epic extends Task {
                 ", type=" + type +
                 '}';
     }
-
 
 }

@@ -22,7 +22,7 @@ public class Task {
     }
 
 
-    public Task(String name, String description, Status status,  LocalDateTime startTime, int duration) {
+    public Task(String name, String description, Status status, LocalDateTime startTime, int duration) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -32,17 +32,18 @@ public class Task {
 
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(getDurationInFormat(this.duration) );
+        return startTime.plus(getDurationInFormat(this.duration));
     }
 
     public Duration getDurationInFormat(int duration) {
         return Duration.ofMinutes(duration);
     }
 
-    public LocalDateTime toFormatTime(String time){
+    public LocalDateTime toFormatTime(String time) {
         return LocalDateTime.parse(time, formatter);
     }
-    public String toStringTime(LocalDateTime time){
+
+    public String toStringTime(LocalDateTime time) {
         return time.format(formatter);
     }
 
@@ -98,6 +99,7 @@ public class Task {
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
+
     @Override
     public String toString() {
         return "service.task.Task{" +
