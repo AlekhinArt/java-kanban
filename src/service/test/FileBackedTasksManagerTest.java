@@ -1,30 +1,39 @@
 package service.test;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.manager.FileBackedTasksManager;
-import service.manager.ManagerSaveException;
 import service.task.Epic;
 import service.task.Status;
 import service.task.SubTask;
-import service.task.Task;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTasksManagerTest {
-    File file = new File("bin\\test.CSV");
-    FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+    FileBackedTasksManager fileBackedTasksManager;
     FileBackedTasksManager testFileBackedTasksManager;
+    Epic testEpic;
+    SubTask testSubtask;
+    SubTask testSubtask2;
+    File file;
 
-    Epic testEpic = new Epic("Test addNew", "Test addNew description", Status.DONE);
-    SubTask testSubtask = new SubTask("Test addNew", "Test addNew description",
-            Status.NEW, testEpic.getId());
-    SubTask testSubtask2 = new SubTask("Test addNew", "Test addNew description",
-            Status.DONE, testEpic.getId());
+    @BeforeEach
+    void beforeEach() {
+        file = new File("bin\\test.CSV");
+        fileBackedTasksManager = new FileBackedTasksManager(file);
+
+        testEpic = new Epic("Test addNew", "Test addNew description", Status.DONE);
+        testSubtask = new SubTask("Test addNew", "Test addNew description",
+                Status.NEW, testEpic.getId());
+        testSubtask2 = new SubTask("Test addNew", "Test addNew description",
+                Status.DONE, testEpic.getId());
+
+
+    }
 
     @Test
     void saveAddLoadTasks() {
@@ -63,8 +72,6 @@ class FileBackedTasksManagerTest {
         assertEquals(1, testEpics.size(), "Список  пустой");
         assertEquals(epics, testEpics, "Не корректно загружен список из файла");
     }
-
-
 
 
 }

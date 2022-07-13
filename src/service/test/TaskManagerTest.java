@@ -14,7 +14,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTest {
+class TaskManagerTest <T extends  TaskManager> {
+
     TaskManager taskManager = new InMemoryTaskManager();
     Epic testEpicOne;
     Epic testEpicTwo;

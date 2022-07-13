@@ -10,26 +10,18 @@ import java.util.*;
 public class Epic extends Task {
 
     private List<Integer> subTasksId = new ArrayList<>();
+
+    public List<SubTask> getSubTasks() {
+        return subTasks;
+    }
+
     private final List<SubTask> subTasks = new LinkedList<>();
     private final Type type = Type.EPIC;
-    private int duration;
-    private LocalDateTime starTime;
     private LocalDateTime endTime;
+
 
     public Epic(String name, String description, Status status) {
         super(name, description, status);
-    }
-
-    public void setTime() {
-        if (subTasks.isEmpty()) return;
-        for (int id : subTasksId) {
-            subTasks.add(Managers.getDefault().getSubs().get(id));
-        }
-        this.subTasks.sort(Comparator.comparing(Task::getStartTime));
-        this.starTime = this.subTasks.get(0).getStartTime();
-        this.endTime = this.subTasks.get(this.subTasks.size() - 1).getStartTime();
-        Duration durationBetween = Duration.between(this.starTime, this.endTime);
-        this.duration = durationBetween.toMinutesPart();
     }
 
     public LocalDateTime getEndTime() {
@@ -46,14 +38,6 @@ public class Epic extends Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public LocalDateTime getStarTime() {
-        return starTime;
-    }
-
-    public void setStarTime(LocalDateTime starTime) {
-        this.starTime = starTime;
     }
 
     @Override

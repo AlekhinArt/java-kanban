@@ -3,6 +3,7 @@ package service.manager;
 import service.history.HistoryManager;
 import service.task.*;
 
+import java.time.Duration;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -34,7 +35,7 @@ public class InMemoryTaskManager implements TaskManager {
         subsListId.add(subTask.getId());
         epic.setSubsId(subsListId);
         setEpicStatus(epic);
-        epic.setTime();
+        setEpicTime(epic);
         checkTimeAndAdd(subTask);
 
     }
@@ -63,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subs.containsKey(id)) {
             subs.put(id, subTask);
             setEpicStatus(epics.get(subTask.getEpicId()));
-            epics.get(subTask.getEpicId()).setTime();
+            setEpicTime(epics.get(subTask.getEpicId()));
             checkTimeAndAdd(subTask);
         }
     }
@@ -158,7 +159,7 @@ public class InMemoryTaskManager implements TaskManager {
             checkTimeAndRemove(subs.get(id));
             subs.remove(id);
             setEpicStatus(epics.get(epicId));
-            epics.get(epicId).setTime();
+            setEpicTime(epics.get(epicId));
             historyManager.remove(id);
         }
     }
@@ -223,6 +224,18 @@ public class InMemoryTaskManager implements TaskManager {
             }
             epic.setStatus(Status.DONE);
         }
+    }
+
+    private void setEpicTime(Epic epic) {
+        if (epic.getSubTasks().isEmpty()) return;
+        for (int id : epic.getSubsId()) {
+            epic.getSubTasks().add(Managers.getDefault().getSubs().get(id));
+        }
+        epic.getSubTasks().sort(Comparator.comparing(Task::getStartTime));
+        epic.setStartTime(epic.getSubTasks().get(0).getStartTime());
+        epic.setEndTime(epic.getSubTasks().get(epic.getSubTasks().size() - 1).getStartTime());
+        Duration durationBetween = Duration.between(epic.getStartTime(), epic.getEndTime());
+        epic.setDuration(durationBetween.toMinutesPart());
     }
 
     private int generateId() {
