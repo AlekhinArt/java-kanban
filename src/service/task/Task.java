@@ -6,22 +6,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
-    private final String name;
+    private String name;
     private String description;
     private int id;
     private Status status;
-    private Type type = Type.TASK;
+    private  Type type = Type.TASK;;
     private int duration;
     private LocalDateTime startTime;
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
     }
-
 
     public Task(String name, String description, Status status, LocalDateTime startTime, int duration) {
         this.name = name;
@@ -31,6 +28,8 @@ public class Task {
         this.duration = duration;
     }
 
+//    public Task() {
+//    }
 
     public LocalDateTime getEndTime() {
         return startTime.plus(getDurationInFormat(this.duration));
@@ -41,10 +40,12 @@ public class Task {
     }
 
     public LocalDateTime toFormatTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return LocalDateTime.parse(time, formatter);
     }
 
     public String toStringTime(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return time.format(formatter);
     }
 
@@ -80,14 +81,13 @@ public class Task {
         return type;
     }
 
-    public void setType(Type type) {
+        public void setType(Type type) {
         this.type = type;
     }
 
     public int getDuration() {
         return duration;
     }
-
 
     public void setDuration(int duration) {
         this.duration = duration;

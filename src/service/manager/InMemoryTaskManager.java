@@ -125,12 +125,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getSubs() {
+    public List<SubTask> getSubs() {
         return new ArrayList<>(subs.values());
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -257,7 +257,6 @@ public class InMemoryTaskManager implements TaskManager {
             tasksNoDate.add(task);
         }
     }
-// Возможно не заметили, чуть ниже для удаления)
 
     private void checkTimeAndRemove(Task task) {
         if (task.getStartTime() != null) {

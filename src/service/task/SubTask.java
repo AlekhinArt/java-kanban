@@ -5,17 +5,19 @@ import java.util.Objects;
 
 public class SubTask extends Task {
     private final int epicId;
-    private Type type = Type.SUBTASK;
 
     public SubTask(String name, String description, Status status, int epicId) {
         super(name, description, status);
         this.epicId = epicId;
+        setType(Type.SUBTASK);
+
     }
 
     public SubTask(String name, String description, Status status, LocalDateTime startTime,
                    int duration, int epicId) {
         super(name, description, status, startTime, duration);
         this.epicId = epicId;
+        setType(Type.SUBTASK);
     }
 
     public int getEpicId() {
@@ -47,14 +49,5 @@ public class SubTask extends Task {
         return Objects.hash(super.hashCode(), epicId);
     }
 
-    @Override
-    public Type getType() {
-        return type;
-    }
-
-    @Override
-    public void setType(Type type) {
-        this.type = type;
-    }
 }
 

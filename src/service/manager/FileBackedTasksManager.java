@@ -18,8 +18,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public static void main(String[] args) throws ManagerSaveException {
-
+    public FileBackedTasksManager() {
+        file = null;
     }
 
     @Override
@@ -116,6 +116,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public void addLoadTask(Task task) {
+
         switch (task.getType()) {
             case EPIC:
                 super.addEpic((Epic) task);
@@ -127,6 +128,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 super.addTask(task);
                 break;
         }
+    }
+
+    public Task getTaskWithOutSave(int id) {
+        Task task = super.getTask(id);
+        return task;
+    }
+
+    public Epic getEpicWithOutSave(int id) {
+        Epic epic = super.getEpic(id);
+        return epic;
+    }
+
+    public SubTask getSubWithOutSave(int id) {
+        SubTask subTask = super.getSub(id);
+        return subTask;
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
