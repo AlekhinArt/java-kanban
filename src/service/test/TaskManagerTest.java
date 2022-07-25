@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTest <T extends  TaskManager> {
+class TaskManagerTest<T extends TaskManager> {
 
     TaskManager taskManager = new InMemoryTaskManager();
     Epic testEpicOne;
@@ -296,6 +296,7 @@ class TaskManagerTest <T extends  TaskManager> {
         assertNull(testTaskOne, "Задача не удалена");
         assertNull(testTaskTwo, "Задача не удалена");
     }
+
     @Test
     void deleteAllTasksWithEmptyTaskList() {
         taskManager.deleteAllTasks();

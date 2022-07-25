@@ -53,7 +53,7 @@ public class EpicAdapter extends TypeAdapter<Epic> {
     }
 
     @Override
-    public Epic read(JsonReader jsonReader) throws IOException {
+    public Epic read(JsonReader jsonReader) {
         return null;
     }
 }

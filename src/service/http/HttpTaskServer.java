@@ -2,15 +2,11 @@ package service.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import service.kvs.KVServer;
 import service.manager.Managers;
-import service.manager.TaskManager;
 import service.task.Epic;
-import service.task.Status;
 import service.task.SubTask;
 import service.task.Task;
 import service.typeAdapter.EpicAdapter;
@@ -21,12 +17,10 @@ import service.typeAdapter.TaskAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.concurrent.Executor;
+
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -35,8 +29,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    static TaskManager managers = Managers.getDefault();
-    private static final Gson gson = new Gson();
     HttpServer taskServer;
 
     public HttpTaskServer() throws IOException {
@@ -44,26 +36,14 @@ public class HttpTaskServer {
         taskServer.bind(new InetSocketAddress(PORT), 0);
         taskServer.createContext("/task", new HelloHandler());
 
-//        taskServer= HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
-
     }
 
 
-    public static void main(String[] args) throws IOException {
-//    HttpTaskServer as = new HttpTaskServer();
-//    as.start();
-//        KVServer kvServer = new KVServer();
-//        kvServer.start();
-//        HttpTaskServer asas = new HttpTaskServer();
-//        asas.start();
-
-//
-        managers.addTask(new Task("Test TASK 1", "Test addNew description", Status.NEW));
-
+    public static void main(String[] args) {
 
     }
 
-    public void start() throws IOException {
+    public void start() {
         taskServer.start();
     }
 
@@ -98,27 +78,22 @@ public class HttpTaskServer {
                     switch (method) {
                         case ("GET"):
                             if (id >= 0) {
-
-                                response = gson.toJson(managers.getTask(id));
-
+                                response = gson.toJson(Managers.getDefault().getTask(id));
                             } else {
-                                response = gson.toJson(managers.getTasks());
-
+                                response = gson.toJson(Managers.getDefault().getTasks());
                             }
-
-
                             sendText(exchange, response);
                             break;
                         case ("POST"):
-                            managers.addTask(gson.fromJson(body, Task.class));
+                            Managers.getDefault().addTask(gson.fromJson(body, Task.class));
                             exchange.sendResponseHeaders(201, 0);
                             exchange.close();
                             break;
                         case ("DELETE"):
                             if (id >= 0) {
-                                managers.deleteTask(id);
+                                Managers.getDefault().deleteTask(id);
                             } else {
-                                managers.deleteAllTasks();
+                                Managers.getDefault().deleteAllTasks();
                             }
                             exchange.sendResponseHeaders(200, 0);
                             exchange.close();
@@ -129,22 +104,22 @@ public class HttpTaskServer {
                     switch (method) {
                         case ("GET"):
                             if (id >= 0) {
-                                response = gson.toJson(managers.getSub(id));
+                                response = gson.toJson(Managers.getDefault().getSub(id));
                             } else {
-                                response = gson.toJson(managers.getSubs());
+                                response = gson.toJson(Managers.getDefault().getSubs());
                             }
                             sendText(exchange, response);
                             break;
                         case ("POST"):
-                            managers.addSub(gson.fromJson(body, SubTask.class));
+                            Managers.getDefault().addSub(gson.fromJson(body, SubTask.class));
                             exchange.sendResponseHeaders(201, 0);
                             exchange.close();
                             break;
                         case ("DELETE"):
                             if (id >= 0) {
-                                managers.deleteSub(id);
+                                Managers.getDefault().deleteSub(id);
                             } else {
-                                managers.deleteAllSubTasks();
+                                Managers.getDefault().deleteAllSubTasks();
                             }
                             exchange.sendResponseHeaders(200, 0);
                             break;
@@ -154,38 +129,38 @@ public class HttpTaskServer {
                     switch (method) {
                         case ("GET"):
                             if (id >= 0) {
-                                response = gson.toJson(managers.getEpic(id));
+                                response = gson.toJson(Managers.getDefault().getEpic(id));
                             } else {
-                                response = gson.toJson(managers.getEpics());
+                                response = gson.toJson(Managers.getDefault().getEpics());
                             }
                             sendText(exchange, response);
                             break;
                         case ("POST"):
-                            managers.addEpic(gson.fromJson(body, Epic.class));
+                            Managers.getDefault().addEpic(gson.fromJson(body, Epic.class));
                             exchange.sendResponseHeaders(201, 0);
                             exchange.close();
                             break;
                         case ("DELETE"):
                             if (id >= 0) {
-                                managers.deleteEpic(id);
+                                Managers.getDefault().deleteEpic(id);
                             } else {
-                                managers.deleteAllEpics();
+                                Managers.getDefault().deleteAllEpics();
                             }
                             exchange.sendResponseHeaders(200, 0);
                             break;
                     }
                     break;
                 case ("/tasks/history"):
-                    response = gson.toJson(managers.getHistory());
+                    response = gson.toJson(Managers.getDefault().getHistory());
                     sendText(exchange, response);
 
                     break;
                 case ("/tasks/subtask/epic/"):
-                    response = gson.toJson(managers.getEpicSubtasks(id));
+                    response = gson.toJson(Managers.getDefault().getEpicSubtasks(id));
                     sendText(exchange, response);
                     break;
                 case ("/tasks/"):
-                    response = gson.toJson(managers.getPrioritizedTasks());
+                    response = gson.toJson(Managers.getDefault().getPrioritizedTasks());
                     sendText(exchange, response);
                     break;
             }

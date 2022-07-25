@@ -7,10 +7,10 @@ import java.time.Duration;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int id;
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, SubTask> subs = new HashMap<>();
-    private final Map<Integer, Task> tasks = new HashMap<>();
+    private int id = 1;
+    final Map<Integer, Epic> epics = new HashMap<>();
+    final Map<Integer, SubTask> subs = new HashMap<>();
+    final Map<Integer, Task> tasks = new HashMap<>();
     private final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     private final List<Task> tasksNoDate = new LinkedList<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
@@ -18,7 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addEpic(Epic epic) {
         if (epic == null) return;
-        epic.setId(generateId());
+        if (epic.getId() == 0) epic.setId(generateId());
         setEpicStatus(epic);
         epics.put(epic.getId(), epic);
     }
@@ -27,9 +27,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void addSub(SubTask subTask) {
         if (subTask == null) return;
         Epic epic = epics.get(subTask.getEpicId());
+        System.out.println(subTask.getEpicId());
+        System.out.println(epics.get(2));
         if (epic == null) return;
         if (checkTimeIntersection(subTask)) return;
-        subTask.setId(generateId());
+        if (subTask.getId() == 0) subTask.setId(generateId());
         subs.put(subTask.getId(), subTask);
         List<Integer> subsListId = epic.getSubsId();
         subsListId.add(subTask.getId());
@@ -37,14 +39,13 @@ public class InMemoryTaskManager implements TaskManager {
         setEpicStatus(epic);
         setEpicTime(epic);
         checkTimeAndAdd(subTask);
-
     }
 
     @Override
     public void addTask(Task task) {
         if (task == null) return;
         if (checkTimeIntersection(task)) return;
-        task.setId(generateId());
+        if (task.getId() == 0) task.setId(generateId());
         tasks.put(task.getId(), task);
         checkTimeAndAdd(task);
     }
@@ -81,8 +82,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        List<Integer> epicsId = new ArrayList<>();
-        epicsId.addAll(epics.keySet());
+        List<Integer> epicsId = new ArrayList<>(epics.keySet());
         for (Integer id : epicsId) {
             deleteEpic(id);
         }
@@ -90,8 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubTasks() {
-        List<Integer> subsId = new ArrayList<>();
-        subsId.addAll(subs.keySet());
+        List<Integer> subsId = new ArrayList<>(subs.keySet());
         for (Integer id : subsId) {
             checkTimeAndRemove(subs.get(id));
             deleteSub(id);
@@ -100,8 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        List<Integer> tasksId = new ArrayList<>();
-        tasksId.addAll(tasks.keySet());
+        List<Integer> tasksId = new ArrayList<>(tasks.keySet());
         for (Integer id : tasksId) {
             checkTimeAndRemove(tasks.get(id));
             deleteTask(id);
@@ -170,7 +168,6 @@ public class InMemoryTaskManager implements TaskManager {
             checkTimeAndRemove(tasks.get(id));
             tasks.remove(id);
             historyManager.remove(id);
-
         }
     }
 

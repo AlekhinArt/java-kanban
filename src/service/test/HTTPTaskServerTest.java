@@ -1,6 +1,8 @@
 package service.test;
 
-import com.google.gson.Gson;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,94 +15,102 @@ import service.task.SubTask;
 import service.task.Task;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.List;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class HTTPTaskServerTest {
-    HTTPTaskManager httpTaskManagerTestOne;//= new HTTPTaskManager(new URL("http://localhost"));
-    HTTPTaskManager httpTaskManagerTestTwo;// = new HTTPTaskManager(new URL("http://localhost"));
-    URL url = new URL("http://localhost");
-    KVServer kvServer;
+    private KVServer kvServer;
+    private HttpTaskServer httpTaskServer;
+    HTTPTaskManager httpTaskManager;
+    HTTPTaskManager testHttpTaskManager;
     Epic testEpic;
     SubTask testSubtask1;
     SubTask testSubtask2;
     Task testTask1;
     Task testTask2;
-    HttpTaskServer testHttpTaskServer;
-
-
-    public HTTPTaskServerTest() throws IOException {
-        kvServer = new KVServer();
-        testHttpTaskServer = new HttpTaskServer();
-        //  httpTaskManagerTestOne = new HTTPTaskManager(url);
-        // httpTaskManagerTestTwo = new HTTPTaskManager(url);
-        testEpic = new Epic("Test EPIC", "Test addNew description", Status.DONE);
-        testSubtask1 = new SubTask("Test SUBTASK 1", "Test addNew description",
-                Status.NEW, testEpic.getId());
-        testSubtask2 = new SubTask("Test SUBTASK 2", "Test addNew description",
-                Status.DONE, testEpic.getId());
-        testTask1 = new Task("Test TASK 1", "Test addNew description", Status.NEW);
-        testTask2 = new Task("Test TASK 1", "Test addNew description", Status.NEW);
-
-    }
 
     @BeforeEach
-    void beforeEach() throws IOException {
+    public void startServers() throws IOException, InterruptedException {
+        kvServer = new KVServer();
         kvServer.start();
-        testHttpTaskServer.start();
-//    testHttpTaskServer = new HttpTaskServer();
-        httpTaskManagerTestOne = new HTTPTaskManager(url);
-        //httpTaskManagerTestTwo = new HTTPTaskManager(url);
-
-
+        httpTaskServer = new HttpTaskServer();
+        httpTaskServer.start();
+        httpTaskManager = new HTTPTaskManager(new URL("http://localhost"));
+        testHttpTaskManager = new HTTPTaskManager(new URL("http://localhost"));
+        httpTaskManager = HTTPTaskManager.loadFromServer(new URL("http://localhost"));
         testEpic = new Epic("Test EPIC", "Test addNew description", Status.DONE);
         testSubtask1 = new SubTask("Test SUBTASK 1", "Test addNew description",
-                Status.NEW, testEpic.getId());
+                Status.NEW, 1);
         testSubtask2 = new SubTask("Test SUBTASK 2", "Test addNew description",
-                Status.DONE, testEpic.getId());
+                Status.DONE, 1);
         testTask1 = new Task("Test TASK 1", "Test addNew description", Status.NEW);
         testTask2 = new Task("Test TASK 1", "Test addNew description", Status.NEW);
 
     }
 
     @AfterEach
-    void AfterEach() {
+    public void stopServer() {
         kvServer.stop();
+        httpTaskServer.stop();
     }
 
     @Test
-    void check() {
-        httpTaskManagerTestOne.addTask(testTask1);
-        HttpResponse<String> response = null;
-        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
-        String uri = url + ":8080" + "/tasks/task";
-        HttpRequest request = requestBuilder
-                .GET()    // указываем HTTP-метод запроса
-                .uri(URI.create(uri)) // указываем адрес ресурса
-                .version(HttpClient.Version.HTTP_1_1) // указываем версию протокола HTTP
-                .header("Content-Type", "application/json") // указываем заголовок Accept
-                .build(); // заканчиваем настройку и создаём ("строим") HTTP-запрос
-        HttpClient client = HttpClient.newHttpClient();
+    void loadFromServerSubTasks() throws IOException, InterruptedException {
+        httpTaskManager.addEpic(testEpic);
+        httpTaskManager.addSub(testSubtask1);
+        httpTaskManager.addSub(testSubtask2);
+        httpTaskManager.addTask(testTask1);
+        List<SubTask> subTasks = httpTaskManager.getSubs();
+        assertNotNull(subTasks, "Список задач пустой");
 
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        testHttpTaskManager = HTTPTaskManager.loadFromServer(new URL("http://localhost"));
+        List<SubTask> testSubTasks = testHttpTaskManager.getSubs();
 
-            // kvServer.stop();
+        assertEquals(2, testSubTasks.size(), "Не корректно загружен список ");
+        assertEquals(subTasks, testSubTasks, "Не корректно загружен список ");
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertEquals(testTask1.toString(), response.body().toString());
+    @Test
+    void loadFromServerOneTask() throws IOException, InterruptedException {
+        httpTaskManager.addTask(testTask1);
+        List<Task> tasks = httpTaskManager.getTasks();
+        assertEquals(1, tasks.size(), "Список задач пустой, задача не загружена");
 
-        Gson gson = new Gson();
-        //Task task = gson.fromJson(response, Task.class);
+        testHttpTaskManager = HTTPTaskManager.loadFromServer(new URL("http://localhost"));
+        List<Task> testTasks = testHttpTaskManager.getTasks();
+        assertEquals(1, testTasks.size(), "Список задач пустой, задача не выгружена");
+
+        Task testTask2 = testTasks.get(0);
+        assertEquals(testTask1, testTask2, "Задача не корректно сохранена/выгружена");
+
+    }
+
+    @Test
+    void loadFromEmptyServer() throws IOException, InterruptedException {
+        testHttpTaskManager = HTTPTaskManager.loadFromServer(new URL("http://localhost"));
+        assertEquals(0, testHttpTaskManager.getTasks().size(), "Выгрузка с пустого сервера не корректна");
+        assertEquals(0, testHttpTaskManager.getSubs().size(), "Выгрузка с пустого сервера не корректна");
+        assertEquals(0, testHttpTaskManager.getEpics().size(), "Выгрузка с пустого сервера не корректна");
+        assertEquals(0, testHttpTaskManager.getHistory().size(), "Выгрузка с пустого сервера не корректна");
+    }
+
+    @Test
+    void history() throws IOException, InterruptedException {
+        httpTaskManager.addTask(testTask1);
+        httpTaskManager.addEpic(testEpic);
+        httpTaskManager.getTask(testTask1.getId());
+        httpTaskManager.getEpic(testEpic.getId());
+
+        List<Task> history = httpTaskManager.getHistory();
+        assertEquals(2, history.size(), "история записана не верно");
+
+        testHttpTaskManager = HTTPTaskManager.loadFromServer(new URL("http://localhost"));
+        List<Task> historyTest = testHttpTaskManager.getHistory();
+        assertEquals(2, historyTest.size(), "история выгружена не корректно");
+        assertEquals(historyTest, history, "Истории не отличаются");
 
     }
 

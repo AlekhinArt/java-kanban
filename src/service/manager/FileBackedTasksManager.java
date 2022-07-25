@@ -116,33 +116,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public void addLoadTask(Task task) {
-
+        int id = task.getId();
         switch (task.getType()) {
             case EPIC:
                 super.addEpic((Epic) task);
+                task.setId(id);
                 break;
             case SUBTASK:
                 super.addSub((SubTask) task);
+                task.setId(id);
                 break;
             case TASK:
                 super.addTask(task);
+                task.setId(id);
                 break;
         }
     }
 
     public Task getTaskWithOutSave(int id) {
-        Task task = super.getTask(id);
-        return task;
+        return super.getTask(id);
     }
 
     public Epic getEpicWithOutSave(int id) {
-        Epic epic = super.getEpic(id);
-        return epic;
+        return super.getEpic(id);
     }
 
     public SubTask getSubWithOutSave(int id) {
-        SubTask subTask = super.getSub(id);
-        return subTask;
+        return super.getSub(id);
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {

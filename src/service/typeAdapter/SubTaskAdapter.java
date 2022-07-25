@@ -35,9 +35,8 @@ public class SubTaskAdapter extends TypeAdapter <SubTask> {
 
     }
 
-
     @Override
-    public SubTask read(JsonReader jsonReader) throws IOException {
+    public SubTask read(JsonReader jsonReader) {
         return null;
     }
 }

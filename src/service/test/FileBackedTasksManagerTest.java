@@ -8,10 +8,7 @@ import service.task.Status;
 import service.task.SubTask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     FileBackedTasksManager fileBackedTasksManager;

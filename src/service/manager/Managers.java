@@ -8,8 +8,7 @@ import java.net.URL;
 
 public class Managers {
     private static final HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
-    private static TaskManager taskManager =  new HTTPTaskManager();
-    //private static  final FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+    private static TaskManager taskManager = new HTTPTaskManager();
 
     static public HistoryManager getDefaultHistory() {
         return inMemoryHistoryManager;
@@ -17,11 +16,11 @@ public class Managers {
 
     static public TaskManager getDefault() {
         try {
-            taskManager =  new HTTPTaskManager(new URL("http://localhost"));
+            taskManager = new HTTPTaskManager(new URL("http://localhost"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return  taskManager;
+        return taskManager;
     }
 
 }
