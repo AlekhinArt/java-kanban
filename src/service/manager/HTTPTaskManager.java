@@ -21,6 +21,15 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     private static String keySubTask;
     private static String keyEpic;
     private String keyHistory;
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
+    Gson gsonSave = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Epic.class, new EpicAdapter())
+            .registerTypeAdapter(SubTask.class, new SubTaskAdapter())
+            .registerTypeAdapter(Task.class, new TaskAdapter())
+            .create();
 
     public HTTPTaskManager(URL url) {
         kvTaskClient = new KVTaskClient(url);
@@ -65,9 +74,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     public static HTTPTaskManager loadFromServer(URL url) throws IOException, InterruptedException {
         HTTPTaskManager httpTaskManager = new HTTPTaskManager(url);
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
+
         ArrayList<Task> tasks = gson.fromJson(kvTaskClient.load(keyTask), new TypeToken<ArrayList<Task>>() {
         }.getType());
         if (tasks.size() > 0) {
@@ -102,18 +109,11 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     public void save() {
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Epic.class, new EpicAdapter())
-                .registerTypeAdapter(SubTask.class, new SubTaskAdapter())
-                .registerTypeAdapter(Task.class, new TaskAdapter())
-                .create();
         try {
-            kvTaskClient.put(keyEpic, gson.toJson(getEpics()));
-            kvTaskClient.put(keySubTask, gson.toJson(this.getSubs()));
-            kvTaskClient.put(keyHistory, gson.toJson(Managers.getDefaultHistory().getHistory()));
-            kvTaskClient.put(keyTask, gson.toJson(getTasks()));
+            kvTaskClient.put(keyEpic, gsonSave.toJson(getEpics()));
+            kvTaskClient.put(keySubTask, gsonSave.toJson(this.getSubs()));
+            kvTaskClient.put(keyHistory, gsonSave.toJson(Managers.getDefaultHistory().getHistory()));
+            kvTaskClient.put(keyTask, gsonSave.toJson(getTasks()));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

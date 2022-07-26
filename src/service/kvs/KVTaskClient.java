@@ -11,9 +11,8 @@ import java.net.http.HttpResponse;
 
 public class KVTaskClient {
     private String API_TOKEN;
-    public static final int PORT = 8078;
     private URL url;
-
+//    String PORT = "8078";
 
     public KVTaskClient(URL url) {
         this.url = url;
@@ -39,7 +38,7 @@ public class KVTaskClient {
     }
 
     public void registration() throws IOException, InterruptedException, URISyntaxException {
-        String uri = "http://" + url.getHost() + ":" + PORT;
+        String uri = "http://" + url.getHost() + ":" + url.getPort();
         url = new URL(uri);
         setAPI_TOKEN(makeGetRequest(new URL(uri + "/register")));
     }

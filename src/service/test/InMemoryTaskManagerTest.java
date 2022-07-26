@@ -51,9 +51,11 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     void epicStatusWithAllSubtasksStatusDone() {
-        subTask.setStatus(Status.DONE);
-        subTask2.setStatus(Status.DONE);
         inMemoryTaskManager.addEpic(epic);
+        subTask = new SubTask("Test 1 ", "Test epicStatus description",
+                Status.DONE, LocalDateTime.now(), 8, epic.getId());
+        subTask2 = new SubTask("Test 2 ", "Test epicStatus description",
+                Status.DONE, LocalDateTime.now().plusHours(1), 8, epic.getId());
         inMemoryTaskManager.addSub(subTask);
         inMemoryTaskManager.addSub(subTask2);
 
@@ -62,9 +64,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     void epicStatusWithSubtasksStatusDoneAndNew() {
-        subTask.setStatus(Status.DONE);
-        subTask2.setStatus(Status.NEW);
         inMemoryTaskManager.addEpic(epic);
+        subTask = new SubTask("Test 1 ", "Test epicStatus description",
+                Status.DONE, LocalDateTime.now(), 8, epic.getId());
+        subTask2 = new SubTask("Test 2 ", "Test epicStatus description",
+                Status.NEW, LocalDateTime.now().plusHours(1), 8, epic.getId());
+
         inMemoryTaskManager.addSub(subTask);
         inMemoryTaskManager.addSub(subTask2);
 
@@ -73,9 +78,11 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     void epicStatusWithAllSubtasksStatusInProgress() {
-        subTask.setStatus(Status.IN_PROGRESS);
-        subTask2.setStatus(Status.IN_PROGRESS);
         inMemoryTaskManager.addEpic(epic);
+        subTask = new SubTask("Test 1 ", "Test epicStatus description",
+                Status.IN_PROGRESS, LocalDateTime.now(), 8, epic.getId());
+        subTask2 = new SubTask("Test 2 ", "Test epicStatus description",
+                Status.IN_PROGRESS, LocalDateTime.now().plusHours(1), 8, epic.getId());
         inMemoryTaskManager.addSub(subTask);
         inMemoryTaskManager.addSub(subTask2);
 
@@ -85,6 +92,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @Test
     void getPrioritizedTasks() {
         inMemoryTaskManager.addEpic(epic);
+        subTask = new SubTask("Test 1 ", "Test epicStatus description",
+                Status.DONE, LocalDateTime.now(), 8, epic.getId());
+        subTask2 = new SubTask("Test 2 ", "Test epicStatus description",
+                Status.NEW, LocalDateTime.now().plusHours(1), 8, epic.getId());
+        subTask3 = new SubTask("Test 3", "Test epicStatus description",
+                Status.NEW, LocalDateTime.now().plusHours(2), 8, epic.getId());
         inMemoryTaskManager.addSub(subTask);
         inMemoryTaskManager.addSub(subTask3);
         inMemoryTaskManager.addSub(subTask2);

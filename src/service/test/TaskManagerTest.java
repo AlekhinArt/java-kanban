@@ -21,9 +21,7 @@ class TaskManagerTest<T extends TaskManager> {
     Epic testEpicTwo;
     int epicId;
     SubTask testSubTaskOne;
-    int subId;
     SubTask testSubTaskTwo;
-    int testSubId;
     Task testTaskOne;
     int taskId;
     Task testTaskTwo;
@@ -33,12 +31,6 @@ class TaskManagerTest<T extends TaskManager> {
     public void adllAll() {
         testEpicOne = new Epic("Test addNewEpic", "Test addNewEpic description", Status.NEW);
         epicId = testEpicOne.getId();
-        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
-                Status.NEW, testEpicOne.getId());
-        subId = testSubTaskOne.getId();
-        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
-                Status.DONE, testEpicOne.getId());
-        testSubId = testSubTaskOne.getId();
         testTaskOne = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
         taskId = testTaskOne.getId();
         testEpicTwo = new Epic("Test addNewEpic", "Test addNewEpic description", Status.DONE);
@@ -49,7 +41,8 @@ class TaskManagerTest<T extends TaskManager> {
     void addEpic() {
         taskManager.addEpic(testEpicOne);
 
-        final Epic savedTask = taskManager.getEpic(epicId);
+
+        final Epic savedTask = taskManager.getEpic(testEpicOne.getId());
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(testEpicOne, savedTask, "Задачи не совпадают.");
@@ -82,7 +75,10 @@ class TaskManagerTest<T extends TaskManager> {
     @Test
     void addSub() {
         taskManager.addEpic(testEpicOne);
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, 1);
         taskManager.addSub(testSubTaskOne);
+
         final int subId = testSubTaskOne.getId();
 
         final SubTask savedTask = taskManager.getSub(subId);
@@ -178,6 +174,10 @@ class TaskManagerTest<T extends TaskManager> {
     @Test
     void updateSub() {
         taskManager.addEpic(testEpicOne);
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
+        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.DONE, testEpicOne.getId());
         taskManager.addSub(testSubTaskOne);
         final int subId = testSubTaskOne.getId();
         final SubTask savedTaskBefore = taskManager.getSub(subId);
@@ -191,6 +191,10 @@ class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void updateSubWithNull() {
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
+        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.DONE, testEpicOne.getId());
         taskManager.addEpic(testEpicOne);
         taskManager.addSub(testSubTaskOne);
         final int subId = testSubTaskOne.getId();
@@ -229,6 +233,10 @@ class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void deleteAllSubTasks() {
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
+        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.DONE, testEpicOne.getId());
         taskManager.addEpic(testEpicOne);
         taskManager.addSub(testSubTaskOne);
         final int subId = testSubTaskOne.getId();
@@ -322,6 +330,10 @@ class TaskManagerTest<T extends TaskManager> {
     void getEpicSubtasks() {
         taskManager.addEpic(testEpicOne);
         final int epicId = testEpicOne.getId();
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
+        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.DONE, testEpicOne.getId());
 
         taskManager.addSub(testSubTaskOne);
         taskManager.addSub(testSubTaskTwo);
@@ -350,6 +362,10 @@ class TaskManagerTest<T extends TaskManager> {
     @Test
     void getSubs() {
         taskManager.addEpic(testEpicOne);
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
+        testSubTaskTwo = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.DONE, testEpicOne.getId());
         taskManager.addSub(testSubTaskOne);
         taskManager.addSub(testSubTaskTwo);
         List<SubTask> testList = new ArrayList<>();
@@ -387,6 +403,8 @@ class TaskManagerTest<T extends TaskManager> {
     @Test
     void deleteSub() {
         taskManager.addEpic(testEpicOne);
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
         taskManager.addSub(testSubTaskOne);
         final int subId = testSubTaskOne.getId();
 
@@ -400,6 +418,8 @@ class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void deleteSubWithIncorrect() {
+        testSubTaskOne = new SubTask("Test addNewSubTask", "Test addNewSubTask description",
+                Status.NEW, testEpicOne.getId());
         final int subId = testSubTaskOne.getId();
 
         taskManager.deleteSub(-1);

@@ -15,12 +15,7 @@ public class Managers {
     }
 
     static public TaskManager getDefault() {
-        try {
-            taskManager = new HTTPTaskManager(new URL("http://localhost"));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return taskManager;
+        return taskManager =  new HTTPTaskManager();
     }
 
 }

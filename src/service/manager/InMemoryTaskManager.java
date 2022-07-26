@@ -27,8 +27,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void addSub(SubTask subTask) {
         if (subTask == null) return;
         Epic epic = epics.get(subTask.getEpicId());
-        System.out.println(subTask.getEpicId());
-        System.out.println(epics.get(2));
         if (epic == null) return;
         if (checkTimeIntersection(subTask)) return;
         if (subTask.getId() == 0) subTask.setId(generateId());
